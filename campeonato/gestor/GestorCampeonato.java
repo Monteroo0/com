@@ -109,16 +109,25 @@ public class GestorCampeonato {
         /**
          * Calcula las bonificaciones para los jugadores.
          */
-        public void calcularBonificaciones() {
-            System.out.println("\n--- Calculando Bonificaciones de Jugadores ---");
-            for (Equipo equipo : equipos) {
-                for (Jugador jugador : equipo.getJugadores()) {
-                    if (jugador.getPosicion().equals("Delantero")) {
-                        System.out.println("Calculando bonificación alta para Delantero: " + jugador.getNombre());
-                    } else if (jugador.getPosicion().equals("Portero")) {
-                        System.out.println("Calculando bonificación estándar para Portero: " + jugador.getNombre());
-                    } else {
-                        System.out.println("Calculando bonificación base para: " + jugador.getNombre());
+        public interface CalculadorBonificaciones {
+
+            void calcularBonificaciones(List<Equipo> equipos);
+        }
+
+        class CalculadorBonificacionesImpl implements CalculadorBonificaciones {
+
+            @Override
+            public void calcularBonificaciones(List<Equipo> equipos) {
+                System.out.println("\n--- Calculando Bonificaciones de Jugadores ---");
+                for (Equipo equipo : equipos) {
+                    for (Jugador jugador : equipo.getJugadores()) {
+                        if (jugador.getPosicion().equals("Delantero")) {
+                            System.out.println("Calculando bonificación alta para Delantero: " + jugador.getNombre());
+                        } else if (jugador.getPosicion().equals("Portero")) {
+                            System.out.println("Calculando bonificación estándar para Portero: " + jugador.getNombre());
+                        } else {
+                            System.out.println("Calculando bonificación base para: " + jugador.getNombre());
+                        }
                     }
                 }
             }
