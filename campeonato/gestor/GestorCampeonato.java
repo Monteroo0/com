@@ -127,32 +127,57 @@ public class GestorCampeonato {
         /**
          * Genera y muestra en consola diferentes tipos de reportes.
          */
-        public void generarReportes(String formato) {
-            if (formato.equalsIgnoreCase("TEXTO")) {
-                String contenidoReporte = "--- Reporte del Campeonato (TEXTO) ---\n";
-                contenidoReporte += "EQUIPOS:\n";
+// Nueva interfaz y clases (líneas 55-107 en el código final)
+        public interface GeneradorReporte {
+
+            String generar(List<Equipo> equipos, List<Arbitro> arbitros);
+        }
+
+        class ReporteTexto implements GeneradorReporte {
+
+            @Override
+            public String generar(List<Equipo> equipos, List<Arbitro> arbitros) {
+                StringBuilder contenidoReporte = new StringBuilder("--- Reporte del Campeonato (TEXTO) ---\n");
+                contenidoReporte.append("EQUIPOS:\n");
                 for (Equipo equipo : equipos) {
-                    contenidoReporte += "- " + equipo.getNombre() + "\n";
+                    contenidoReporte.append("- ").append(equipo.getNombre()).append("\n");
                 }
-                contenidoReporte += "ÁRBITROS:\n";
+                contenidoReporte.append("ÁRBITROS:\n");
                 for (Arbitro arbitro : arbitros) {
-                    contenidoReporte += "- " + arbitro.getNombre() + "\n";
+                    contenidoReporte.append("- ").append(arbitro.getNombre()).append("\n");
                 }
-                System.out.println(contenidoReporte);
-            } else if (formato.equalsIgnoreCase("HTML")) {
-                String contenidoHtml = "<html><body>\n";
-                contenidoHtml += "  <h1>Reporte del Campeonato</h1>\n";
-                contenidoHtml += "  <h2>Equipos</h2>\n  <ul>\n";
-                for (Equipo equipo : equipos) {
-                    contenidoHtml += "    <li>" + equipo.getNombre() + "</li>\n";
-                }
-                contenidoHtml += "  </ul>\n  <h2>Árbitros</h2>\n  <ul>\n";
-                for (Arbitro arbitro : arbitros) {
-                    contenidoHtml += "    <li>" + arbitro.getNombre() + "</li>\n";
-                }
-                contenidoHtml += "  </ul>\n</body></html>";
-                System.out.println(contenidoHtml);
+                return contenidoReporte.toString();
             }
+        }
+
+        class ReporteHTML implements GeneradorReporte {
+
+            @Override
+            public String generar(List<Equipo> equipos, List<Arbitro> arbitros) {
+                StringBuilder contenidoHtml = new StringBuilder("<html><body>\n");
+                contenidoHtml.append(" <h1>Reporte del Campeonato</h1>\n");
+                contenidoHtml.append(" <h2>Equipos</h2>\n <ul>\n");
+                for (Equipo equipo : equipos) {
+                    contenidoHtml.append(" <li>").append(equipo.getNombre()).append("</li>\n");
+                }
+                contenidoHtml.append(" </ul>\n <h2>Árbitros</h2>\n <ul>\n");
+                for (Arbitro arbitro : arbitros) {
+                    contenidoHtml.append(" <li>").append(arbitro.getNombre()).append("</li>\n");
+                }
+                contenidoHtml.append(" </ul>\n</body></html>");
+                return contenidoHtml.toString();
+            }
+        }
+
+// Modificación en GestorCampeonato (reemplazo parcial, no en el código final aún)
+        public void generarReportes(String formato) {
+            GeneradorReporte generador;
+            if (formato.equalsIgnoreCase("TEXTO")) {
+                generador = new ReporteTexto();
+            } else {
+                generador = new ReporteHTML();
+            }
+            System.out.println(generador.generar(equipos, arbitros));
         }
 
         // Método principal para simular la ejecución del módulo
